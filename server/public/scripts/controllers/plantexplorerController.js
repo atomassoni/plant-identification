@@ -1,7 +1,7 @@
 myApp.controller('PlantexplorerController', ['$scope', '$http', 'DataFactory', function($scope, $http, DataFactory) {
     $scope.dataFactory = DataFactory;
 
-    var GBIFBaseURL = 'http://api.gbif.org/v1';
+
 
     $scope.GBIFSearch = 'mulberry';
     $scope.GBIFrank = {rank :'SPECIES'};
@@ -35,20 +35,15 @@ myApp.controller('PlantexplorerController', ['$scope', '$http', 'DataFactory', f
 
     $scope.getSpeciesInfo = function() {
 
-        var query = '/species/search?highertaxonKey=6&language=ENG';
-        //  query += '?api_key=' + giphyKey;
-
-        query += '&q=' + $scope.GBIFSearch;
+        var query = 'q=' + encodeURI($scope.GBIFSearch);
         query += '&rank=' + $scope.GBIFrank.rank;
         query += '&limit=' + $scope.limit;
 
       if ($scope.GBIFrank.rank=='SPECIES') {
-        var request = GBIFBaseURL + encodeURI(query)
-         + '&callback=JSON_CALLBACK';
 
-        console.log(request);
 
-        $http.jsonp(request).then(
+
+        $http.get('plantexplorer/species?' + query).then(
             function(response) {
                 console.log('GBIF', response.data);
                 $scope.result = response.data.results;
@@ -72,9 +67,9 @@ myApp.controller('PlantexplorerController', ['$scope', '$http', 'DataFactory', f
             }
         )
       } else {
-        var request = GBIFBaseURL + encodeURI(query);
 
-        $http.get(request).then(
+
+        $http.get('plantexplorer/species?' + query).then(
 
           function(response) {
             console.log('GBIF', response.data);
@@ -99,15 +94,11 @@ myApp.controller('PlantexplorerController', ['$scope', '$http', 'DataFactory', f
 
     function itemImage(key) {
 
-        var GBIFBaseURL = 'http://api.gbif.org/v1';
-        var query = '/species/' + key + '/media';
-
-        var request = GBIFBaseURL + encodeURI(query);
-        console.log(request);
-
-        return $http.get(request);
+        var query = 'key=' + key;
+        return $http.get('plantexplorer/image?' + query);
 
     }
+    
     $scope.setSelectedSpecies = function (key) {
         $scope.itemForID = key;
         $scope.itemNameForID = $scope.results.canonicalName;
