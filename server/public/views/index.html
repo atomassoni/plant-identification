@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Plant ID</title>
+
+    <link rel="stylesheet" href="/vendors/normalize.css" />
+    <link rel="stylesheet" href="/vendors/skeleton.css" />
+    <link rel="stylesheet" href="/styles/style.css" />
+    <!-- Angular -->
+    <script type="text/javascript" src="/vendors/angular.min.js"></script>
+    <script type="text/javascript" src="/scripts/ang_app.js"></script>
+    <script type="text/javascript" src="/scripts/factories/dataFactory.js"></script>
+    <script type="text/javascript" src="/vendors/angular-route.min.js"></script>
+
+    <script type="text/javascript" src="/scripts/controllers/homeController.js"></script>
+    <script type="text/javascript" src="/scripts/controllers/plantexplorerController.js"></script>
+
+    <body ng-app="myApp" class="container">
+
+        <header ng-include="'/views/templates/header.html'" ></header>
+        <div ng-include="'/views/templates/nav.html'"></div>
+
+            <main ng-view></main>
+        <footer ng-include="'/views/templates/footer.html'" ></footer>
+    </body>
+
+</html>

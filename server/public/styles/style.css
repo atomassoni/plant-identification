@@ -1,0 +1,36 @@
+header {
+	padding-top:4rem;
+}
+
+main {
+	padding-left: 4rem;
+	height:90rem;
+}
+
+footer {
+	background:#ffab62;
+	width:100%;
+	height:6rem;
+	position:absolute;
+	bottom:0;
+	left:0;
+
+	padding: 2rem;
+}
+
+.vernacularName {
+	background-color: cornsilk;
+	font-weight: lighter;
+	font-size: .9rem;
+}
+.listItem {
+	background-color: peachpuff;
+	border-radius:2%;
+	margin: 2rem;
+padding: 2rem;
+box-shadow: .5rem .5rem .5rem grey;
+
+}
+.listImage {
+	width:40rem;
+}

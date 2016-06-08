@@ -1,0 +1,32 @@
+
+
+<div class="row">
+
+    <div class="seven columns home">
+{{itemNameForID}}
+    <input type="text" ng-model="GBIFSearch">
+    <select ng-options="rank.label for rank in GBIFranks" ng-model="GBIFrank">
+    </select>
+    <button ng-click="getSpeciesInfo()">Search Species API</button>
+    <p ng-if="numResults>0">
+        Returned {{numResults}} result(s).
+    </p>
+    <p ng-if="numResults===0">
+        Returned no result(s).
+    </p>
+    <div ng-repeat="species in results" ng-click="setSelectedSpecies(species.speciesKey)"
+    class="listItem" >
+        <a ng-href="http://www.gbif.org/species/{{species.speciesKey}}" target="_blank">{{species.canonicalName}} </a>
+      <span ng-repeat="name in species.vernacularNames" ng-if="name.language=='eng'"> <span class="vernacularName">{{name.vernacularName}}</span> </span>
+    <img ng-if="species.imageURL" ng-src="{{species.imageURL}}" alt="{{species.canonicalName}}" class="listImage"/>
+            {{species.descriptions[0].description}}
+    </div>
+
+</div>
+
+<div class="five columns">
+
+
+
+</div>
+</div>

@@ -1,0 +1,20 @@
+{
+  "name": "plant-id",
+  "version": "1.0.0",
+  "description": "\"a web based application that uses crowd sourcing to identify plants\"",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/app.js"
+  },
+  "author": "Anne Tomassoni",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.5.0",
+    "angular-route": "^1.5.5",
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "mongoose": "^4.4.20",
+    "path": "^0.11.14"
+  }
+}
