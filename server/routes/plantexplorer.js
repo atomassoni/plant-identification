@@ -5,16 +5,17 @@ var GBIFBaseURL = 'http://api.gbif.org/v1';
 var query = '/species/search?highertaxonKey=6&language=ENG';
 
 router.get('/species', function (req, res) {
-  query = GBIFBaseURL+query;
-  query += '&q=' + req.query.q;
-  query += '&rank=' + req.query.rank;
-  query += '&limit=' + req.query.limit;
+  var query1 = GBIFBaseURL+query;
+  query1 += '&q=' + req.query.q;
+  query1 += '&rank=' + req.query.rank;
+  query1 += '&limit=' + req.query.limit;
+console.log(query1);
 
-
- request(query, function (error, response, body) {
+ request(query1, function (error, response, body) {
   if (!error && response.statusCode == 200) {
-
+    console.log(body);
   res.send(body);
+
   }
 })
 

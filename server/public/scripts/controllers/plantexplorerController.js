@@ -35,9 +35,9 @@ myApp.controller('PlantexplorerController', ['$scope', '$http', 'DataFactory', f
 
     $scope.getSpeciesInfo = function() {
 
-        var query = 'q=' + encodeURI($scope.GBIFSearch);
-        query += '&rank=' + $scope.GBIFrank.rank;
-        query += '&limit=' + $scope.limit;
+      var query = 'q=' + encodeURI($scope.GBIFSearch);
+      query += '&rank=' + $scope.GBIFrank.rank;
+      query += '&limit=' + $scope.limit;
 
       if ($scope.GBIFrank.rank=='SPECIES') {
 
@@ -67,7 +67,7 @@ myApp.controller('PlantexplorerController', ['$scope', '$http', 'DataFactory', f
             }
         )
       } else {
-
+console.log("genus");
 
         $http.get('plantexplorer/species?' + query).then(
 
@@ -98,7 +98,7 @@ myApp.controller('PlantexplorerController', ['$scope', '$http', 'DataFactory', f
         return $http.get('plantexplorer/image?' + query);
 
     }
-    
+
     $scope.setSelectedSpecies = function (key) {
         $scope.itemForID = key;
         $scope.itemNameForID = $scope.results.canonicalName;
