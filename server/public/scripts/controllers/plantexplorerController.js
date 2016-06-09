@@ -54,7 +54,7 @@ myApp.controller('PlantexplorerController', ['$scope', '$http', 'DataFactory', f
                     rObj.descriptions = obj.descriptions;
                     rObj.canonicalName = obj.canonicalName;
                     rObj.vernacularNames = obj.vernacularNames;
-                    //rObj.speciesKey = ;
+                    rObj.speciesKey = obj.speciesKey;
                     itemImage(obj.speciesKey).then(
                         function(response) {
                             var media = response.data.results[0] ? response.data.results[0].identifier : '';

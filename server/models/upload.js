@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var UploadSchema = mongoose.Schema({
-  name: String,
+  comment: String,
   created: Date,
   file: Object
 });

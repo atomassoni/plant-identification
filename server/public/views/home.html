@@ -1,20 +1,35 @@
 <div class="row">
 
     <div class="seven columns home">
-        <div >
-  <h1>This is a MEAN stack file upload example!</h1>
-  <form ng-submit="submit()">
-    <legend>Upload a new file here:</legend>
-    <label for="name">Name:</label>
-    <input type="text" name="name" id="name" ng-model="upload.name" required/>
-    <br/>
-    <label for="file">File:</label>
-    <input type="file" name="file" id="file" ng-model="upload.file" ngf-select ngf-max-size="25MB" required/>
-    <br/>
-    <input type="submit" value="Submit"/>
-  </form>
+
+<form name="form" class="listItem">
+  <div class="listHeader">
+    Add a picture for ID!
+  </div>
+<div class="listBody fileUpload">
+
+
+  <div ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
+    ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100"
+    ngf-resize="{width: 400, height: 400}"><button>Select Picture</button> <span class="fileSelect">{{file.$ngfName}} </span>  <img ngf-thumbnail="file || '/images/upload.svg'"></div>
+    <input type="text" ng-model="comment" placeholder="Add comment.. location, which plant, etc. " class="u-full-width"/>
+<button type="submit" ng-click="submit()">Upload</button>
+
 </div>
+</form>
+
+<div class="listItem" ng-repeat="picture in uploads | orderBy: 'created' :true " >
+  <div class="listHeader">
+{{picture.created | date:'medium'}}
+  </div>
+  <div class="listBody">
+    <img ng-src="/uploads/{{picture.file.filename}}" />
+    <div>
+      {{picture.comment}}
     </div>
+    <button>add an id</button>
+  </div>
+</div>
 
     <div class="five columns">
 
