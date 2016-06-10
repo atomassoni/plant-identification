@@ -21,13 +21,20 @@ app.use(bodyParser.json());
 app.use('/plantexplorer', plantexplorer);
 app.use('/uploads', uploads);
 
-// mongoose connection
-var databaseURI = 'mongodb://localhost:27017/mu';
 
-mongoose.connect(databaseURI);
+// mongoose connection
+if(process.env.MONGODB_URI!= undefined) {
+  var connectionString = process.env.MONGODB_URI + "?ssl=true";
+} else {
+    var connectionString = 'mongodb://localhost:27017/mu';
+}
+
+//var databaseURI = 'mongodb://localhost:27017/mu';
+
+mongoose.connect(connectionString);
 
 mongoose.connection.on('connected', function () {
-  console.log('Mongoose connection open ', databaseURI);
+  console.log('Mongoose connection open ', connectionString);
 });
 
 mongoose.connection.on('error', function (err) {
