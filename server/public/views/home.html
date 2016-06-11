@@ -1,6 +1,6 @@
 <div class="row">
 
-    <div class="seven columns home">
+    <div class="six columns home">
 
 <form name="form" class="listItem">
   <div class="listHeader">
@@ -17,21 +17,49 @@
 
 </div>
 </form>
-
+Search under any picture and click on a result. Once you have an "Add id button", click on it and you will have added a scientific name to your picture!
 <div class="listItem" ng-repeat="picture in uploads | orderBy: 'created' :true " >
   <div class="listHeader">
 {{picture.created | date:'medium'}}
   </div>
   <div class="listBody">
-    <img ng-src="/uploads/{{picture.file.filename}}" />
+    <img ng-src="/uploads/{{picture.file.filename}}" class="listImage"/>
     <div>
       {{picture.comment}}
     </div>
-    <button>add an id</button>
+<p ng-repeat="plant in picture.plantID">
+    <a ng-href="http://www.gbif.org/species/{{plant.apiKey}}" target="_blank">{{plant.name}} </a>
+</p>
+    <input type="text" ng-model="GBIFSearch.search" placeholder="Genus, species, common name, etc.">
+        <select ng-options="rank.label for rank in GBIFranks" ng-model="GBIFSearch.rank">
+        </select>
+        <button ng-click="getSpeciesInfo(picture._id)">Search Species API</button>
+    <button class="button-primary" ng-click="submitID(picture._id)" ng-if="currentIdItem==picture._id">Add id of {{itemForID.name}}</button>
+
   </div>
 </div>
+  </div>
+    <div class="six columns search" >
+        <p ng-if="numResults>0">
+            <em>{{GBIFSearch.search}} </em>
+          returned {{numResults}} result(s).
+        </p>
+        <p ng-if="numResults===0">
+            Returned no result(s).
+        </p>
 
-    <div class="five columns">
+<button ng-click="showResults()" ng-if="numResults>0">{{show.buttonText}}</button>
+        <div ng-repeat="species in results"  class="listItem">
+            <div class="listHeader">
+              <i class="fa fa-angle-double-left" style="font-size:18px;color:white" ng-click="setSelectedSpecies(species.canonicalName, species.speciesKey)"></i>  <a ng-href="http://www.gbif.org/species/{{species.speciesKey}}" target="_blank"> {{species.canonicalName}} </a>
+            </div>
+            <div class="listBody" ng-show="show.allResults">
+
+            <span ng-repeat="name in species.vernacularNames" ng-if="name.language=='eng'"> <span class="vernacularName">{{name.vernacularName}}</span> </span>
+            <img ng-if="species.imageURL" ng-src="{{species.imageURL}}" alt="{{species.canonicalName}}" class="listImage" /> {{species.descriptions[0].description}}
+            </div>
+        </div>
 
     </div>
+
 </div>

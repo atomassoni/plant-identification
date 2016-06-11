@@ -35,4 +35,27 @@ router.get('/', function (req, res) {
   });
 });
 
+router.put('/:id', function (req, res) {
+  var id = req.params.id;
+  var plantID = req.body; // {object}
+console.log('req.body', req.body);
+  Upload.findById(id, function (err, upload) {
+    if (err) {
+      res.sendStatus(500);
+      return;
+    }
+
+    upload.plantID.push(plantID);
+
+    upload.save(function (err) {
+      if (err) {
+        res.sendStatus(500);
+        return;
+      }
+
+      res.sendStatus(204);
+    });
+  });
+});
+
 module.exports = router;

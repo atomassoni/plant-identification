@@ -4,6 +4,31 @@ myApp.controller('HomeController', ['$scope', '$http', 'Upload', 'DataFactory', 
     $scope.comment = '';
     $scope.uploads = [];
     $scope.postTime = '';
+
+    $scope.currentIdItem = '';
+    $scope.itemForID = {};
+    $scope.itemForID.name = '';
+    $scope.itemForID.apiKey = 0;
+
+    $scope.GBIFSearch = {};
+    $scope.GBIFSearch.search = '';
+    $scope.GBIFSearch.rank = {rank :'SPECIES'};
+    $scope.GBIFranks =  [{rank: 'SPECIES',label:'Species level search'},
+  {rank: 'GENUS', label: 'Genus level search'},
+  {rank: 'FAMILY', label: 'Family level search'}
+];
+
+
+    $scope.results = [];
+    $scope.positiveID = '';
+    $scope.speciesKey = '';
+    $scope.image = '';
+    $scope.numResults = '';
+    $scope.limit = 20;
+    $scope.offset = 0;
+    $scope.count = 0;
+
+    $scope.show = {allResults: false, buttonText: 'Expand Results'};
     getImages();
 
     $scope.submit = function() {
@@ -38,5 +63,125 @@ myApp.controller('HomeController', ['$scope', '$http', 'Upload', 'DataFactory', 
       });
     }
 
+
+
+    $scope.submitID = function (id) {
+      var plantID = $scope.itemForID;
+console.log('newid', plantID);
+      $http.put('/uploads/' + id, plantID)
+        .then(function (response) {
+          console.log('PUT /ids ', plantID);
+         // $scope.newID = '';
+          getImages();
+          $scope.currentIdItem = '';
+          $scope.itemForID = {};
+        });
+    };
+
+
+
+
+
+
+        // if($scope.dataFactory.factoryGetFavorites() === undefined) {
+        //   $scope.dataFactory.factoryRefreshFavoriteData().then(function() {
+        //     $scope.favCount = $scope.dataFactory.factoryGetFavorites().length;
+        //   });
+        // } else {
+        //   $scope.favCount = $scope.dataFactory.factoryGetFavorites().length;
+        // }
+
+
+
+        $scope.getSpeciesInfo = function(id) {
+          $scope.currentIdItem = id;
+          var query = 'q=' + encodeURI($scope.GBIFSearch.search);
+          query += '&rank=' + $scope.GBIFSearch.rank.rank;
+          query += '&limit=' + $scope.limit;
+
+          if ($scope.GBIFSearch.rank.rank=='SPECIES') {
+
+            $http.get('plantexplorer/species?' + query).then(
+                function(response) {
+                    console.log('GBIF', response.data);
+                    $scope.result = response.data.results;
+                    $scope.numResults = parseInt(response.data.count);
+                    $scope.results = $scope.result.map(function(obj) {
+                        var rObj = {};
+
+                        rObj.descriptions = obj.descriptions;
+                        rObj.canonicalName = obj.canonicalName;
+                        rObj.vernacularNames = obj.vernacularNames;
+                        rObj.speciesKey = obj.speciesKey;
+                        itemImage(obj.speciesKey).then(
+                            function(response) {
+                                var media = response.data.results[0] ? response.data.results[0].identifier : '';
+                                rObj.imageURL = media;
+
+                            });
+                        return rObj;
+                    })
+                    console.log('NEW OBJ', $scope.results);
+                }
+
+            )
+          } else {
+
+            $http.get('plantexplorer/species?' + query).then(
+
+              function(response) {
+                console.log('GBIF', response.data);
+                $scope.result = response.data.results;
+                $scope.numResults = parseInt(response.data.count);
+                $scope.results = $scope.result.map(function(obj) {
+                    var rObj = {};
+
+                    rObj.descriptions = obj.descriptions;
+                    rObj.canonicalName = obj.canonicalName;
+
+                    if ($scope.GBIFSearch.rank.rank=='GENUS') {
+                    rObj.speciesKey = obj.genusKey;
+                  } else {
+                    rObj.speciesKey = obj.familyKey;
+                  }
+                    return rObj;
+          });
+
+        })
+      }
+
+
+    };
+
+        function itemImage(key) {
+
+            var query = 'key=' + key;
+            return $http.get('plantexplorer/image?' + query);
+
+        }
+
+        $scope.setSelectedSpecies = function (name, key) {
+
+            $scope.itemForID.name = name;
+            $scope.itemForID.apiKey = key;
+
+        }
+
+        $scope.showResults = function () {
+          if ($scope.show.allResults) {
+            $scope.show.allResults = false;
+            $scope.show.buttonText = 'Expand results';
+          } else {
+            $scope.show.allResults = true;
+            $scope.show.buttonText = 'Collapse results';
+          }
+        };
+        $scope.loadMoreItems = function () {
+            $scope.limit += 10;
+            if ($scope.limit > $scope.count) {
+                $scope.limit = $scope.count;
+            }
+
+        };
 
 }]);
