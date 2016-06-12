@@ -122,7 +122,9 @@ console.log('newid', plantID);
                         return rObj;
                     })
                     console.log('NEW OBJ', $scope.results);
+                    //$scope.GBIFSearch = {};
                 }
+
 
             )
           } else {
@@ -146,6 +148,7 @@ console.log('newid', plantID);
                   }
                     return rObj;
           });
+          //$scope.GBIFSearch = {};
 
         })
       }

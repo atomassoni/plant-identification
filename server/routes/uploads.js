@@ -3,10 +3,10 @@ var router = express.Router();
 var fs = require('fs');
 var Upload = require('../models/upload');
 var multer = require('multer');
+
+//local file saving for uploads
+
 var upload = multer({dest: 'server/public/uploads'});
-/**
- * Create's the file in the database
- */
 router.post('/', upload.single('file'), function (req, res, next) {
   console.log('req.body', req.body.comment);
   console.log(req.file);
@@ -23,6 +23,33 @@ router.post('/', upload.single('file'), function (req, res, next) {
     }
   });
 });
+
+// //s3 uploads
+// var multerS3 = require('multer-s3');
+//
+// var aws = require('aws-sdk');
+//
+// var s3 = new aws.S3({ /* ... */ });
+//
+// var upload = multer({
+//   storage: multerS3({
+//     s3: s3,
+//     bucket: process.env.S3_BUCKET_NAME,
+//     metadata: function (req, file, cb) {
+//       cb(null, {fieldName: file.fieldname});
+//     },
+//     key: function (req, file, cb) {
+//       cb(null, Date.now().toString())
+//     }
+//   })
+// });
+
+
+router.post('/', upload.single('file'), function(req, res, next) {
+  res.send('Successfully uploaded ' + req.files.length + ' files!');
+})
+
+
 
 router.get('/', function (req, res) {
   Upload.find({}, function (err, data) {

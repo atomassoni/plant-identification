@@ -11,6 +11,14 @@ var myApp = angular.module('myApp', ['ngRoute', 'ngFileUpload']);
         templateUrl: '/views/plantexplorer.html',
         controller: "PlantexplorerController"
       })
+      .when('/register', {
+        templateUrl: '/views/register.html',
+        controller: "LoginController"
+      })
+      .when('/user', {
+        templateUrl: '/views/user.html',
+        controller: "UserController"
+      })
       .otherwise({
         redirectTo: 'home'
       })
