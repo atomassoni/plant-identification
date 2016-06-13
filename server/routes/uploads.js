@@ -7,6 +7,7 @@ var multer = require('multer');
 //local file saving for uploads
 
 var upload = multer({dest: 'server/public/uploads'});
+
 router.post('/', upload.single('file'), function (req, res, next) {
   console.log('req.body', req.body.comment);
   console.log(req.file);
@@ -17,7 +18,8 @@ router.post('/', upload.single('file'), function (req, res, next) {
   };
   Upload.create(newUpload, function (err, next) {
     if (err) {
-      next(err);
+      //next(err);
+      console.log("ERors");
     } else {
       res.send(newUpload);
     }
@@ -45,9 +47,9 @@ router.post('/', upload.single('file'), function (req, res, next) {
 // });
 
 
-router.post('/', upload.single('file'), function(req, res, next) {
-  res.send('Successfully uploaded ' + req.files.length + ' files!');
-})
+// router.post('/', upload.single('file'), function(req, res, next) {
+//   res.send('Successfully uploaded ' + req.files.length + ' files!');
+// })
 
 
 
@@ -61,6 +63,35 @@ router.get('/', function (req, res) {
     res.send(data);
   });
 });
+
+router.put('/select/:id', function (req, res) {
+  var id = req.params.id;
+  var userVote = req.body; // {object}
+console.log('req.body', req.body);
+  Upload.findById(id, function (err, upload) {
+    if (err) {
+      res.sendStatus(500);
+      return;
+    }
+
+
+    upload.plantID.forEach(function(item, index) {
+      if(item._id == userVote.idIndex) {
+        upload.plantID[index].userVotes.push(userVote);
+      }
+    });
+
+    upload.save(function (err) {
+      if (err) {
+        res.sendStatus(500);
+        return;
+      }
+
+      res.sendStatus(204);
+    });
+  });
+});
+
 
 router.put('/:id', function (req, res) {
   var id = req.params.id;

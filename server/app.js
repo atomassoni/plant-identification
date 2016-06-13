@@ -10,18 +10,32 @@ var logger = require('morgan');
 var plantexplorer = require('./routes/plantexplorer');
 var uploads = require('./routes/uploads');
 
+var passport = require('./strategies/userStrategy');
+var session = require('express-session');
+
+
+var index = require('./routes/index');
+var user = require('./routes/user');
+var register = require('./routes/register');
 
 
 // middleware
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, './public')));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// start up passport sessions
+app.use(passport.initialize());
+app.use(passport.session());
+
 // express routes
 
 app.use('/plantexplorer', plantexplorer);
 app.use('/uploads', uploads);
-
+app.use('/register', register);
+app.use('/user', user);
+app.use('/*', index);
 
 // mongoose connection
 if(process.env.MONGODB_URI!= undefined) {

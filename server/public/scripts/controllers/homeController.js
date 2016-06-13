@@ -18,7 +18,6 @@ myApp.controller('HomeController', ['$scope', '$http', 'Upload', 'DataFactory', 
   {rank: 'FAMILY', label: 'Family level search'}
 ];
 
-
     $scope.results = [];
     $scope.positiveID = '';
     $scope.speciesKey = '';
@@ -26,9 +25,15 @@ myApp.controller('HomeController', ['$scope', '$http', 'Upload', 'DataFactory', 
     $scope.numResults = '';
     $scope.limit = 20;
     $scope.offset = 0;
-    $scope.count = 0;
+
 
     $scope.show = {allResults: false, buttonText: 'Expand Results'};
+
+    $scope.userID = "574f2b394539cf4a7e69a877";
+    $scope.userLevel = 5;
+
+    $scope.activePlant = {};
+
     getImages();
 
     $scope.submit = function() {
@@ -63,7 +68,22 @@ myApp.controller('HomeController', ['$scope', '$http', 'Upload', 'DataFactory', 
       });
     }
 
+$scope.setActive = function (obj) {
+  $scope.activePlant = obj;
+  console.log($scope.activePlant);
+};
 
+$scope.selectID = function (id, idIndex) {
+
+  console.log("id", id);
+  var userVote = {'user': $scope.userID, 'level': $scope.userLevel, 'idIndex' :idIndex };
+  $http.put('/uploads/select/' + id, userVote)
+  .then(function (response) {
+console.log('PUT /selects ', userVote);
+getImages();
+
+});
+};
 
     $scope.submitID = function (id) {
       var plantID = $scope.itemForID;
@@ -71,7 +91,6 @@ console.log('newid', plantID);
       $http.put('/uploads/' + id, plantID)
         .then(function (response) {
           console.log('PUT /ids ', plantID);
-         // $scope.newID = '';
           getImages();
           $scope.currentIdItem = '';
           $scope.itemForID = {};
@@ -91,10 +110,13 @@ console.log('newid', plantID);
         //   $scope.favCount = $scope.dataFactory.factoryGetFavorites().length;
         // }
 
+    $scope.loadSpeciesInfo = function () {
+      $scope.limit = 20;
+      getSpeciesInfo();
+    }
 
-
-        $scope.getSpeciesInfo = function(id) {
-          $scope.currentIdItem = id;
+      function getSpeciesInfo () {
+          $scope.currentIdItem = $scope.activePlant._id;
           var query = 'q=' + encodeURI($scope.GBIFSearch.search);
           query += '&rank=' + $scope.GBIFSearch.rank.rank;
           query += '&limit=' + $scope.limit;
@@ -122,6 +144,7 @@ console.log('newid', plantID);
                         return rObj;
                     })
                     console.log('NEW OBJ', $scope.results);
+
                     //$scope.GBIFSearch = {};
                 }
 
@@ -181,10 +204,10 @@ console.log('newid', plantID);
         };
         $scope.loadMoreItems = function () {
             $scope.limit += 10;
-            if ($scope.limit > $scope.count) {
-                $scope.limit = $scope.count;
+            if ($scope.limit > $scope.numResults) {
+                $scope.limit = $scope.numResults;
             }
-
+            getSpeciesInfo();
         };
 
 }]);

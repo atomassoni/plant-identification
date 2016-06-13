@@ -17,23 +17,23 @@
 
 </div>
 </form>
-Search under any picture and click on a result. Once you have an "Add id button", click on it and you will have added a scientific name to your picture!
+
 <div class="listItem" ng-repeat="picture in uploads | orderBy: 'created' :true " >
   <div class="listHeader">
 {{picture.created | date:'medium'}}
   </div>
-  <div class="listBody">
+  <div class="listBody" ng-click="setActive(picture)">
     <img ng-src="/uploads/{{picture.file.filename}}" class="listImage"/>
     <div>
       {{picture.comment}}
     </div>
-<p ng-repeat="plant in picture.plantID">
-    <a ng-href="http://www.gbif.org/species/{{plant.apiKey}}" target="_blank">{{plant.name}} </a>
-</p>
+<div ng-repeat="plant in picture.plantID">
+    <a ng-href="http://www.gbif.org/species/{{plant.apiKey}}" target="_blank">{{plant.name}} </a> <span class="selectID" ng-click="selectID(picture._id, plant._id)">select as id</span>
+</div>
     <input type="text" ng-model="GBIFSearch.search" placeholder="Genus, species, common name, etc.">
         <select ng-options="rank.label for rank in GBIFranks" ng-model="GBIFSearch.rank">
         </select>
-        <button ng-click="getSpeciesInfo(picture._id)">Search Species API</button>
+        <button ng-click="loadSpeciesInfo()">Search Species API</button>
     <button class="button-primary" ng-click="submitID(picture._id)" ng-if="currentIdItem==picture._id">Add id of {{itemForID.name}}</button>
 
   </div>
@@ -42,10 +42,10 @@ Search under any picture and click on a result. Once you have an "Add id button"
     <div class="six columns search" >
         <p ng-if="numResults>0">
             <em>{{GBIFSearch.search}} </em>
-          returned {{numResults}} result(s).
+          returned {{numResults}} result<span ng-if="numResults!=1">s</span>.
         </p>
         <p ng-if="numResults===0">
-            Returned no result(s).
+            Returned no results.
         </p>
 
 <button ng-click="showResults()" ng-if="numResults>0">{{show.buttonText}}</button>
@@ -59,7 +59,9 @@ Search under any picture and click on a result. Once you have an "Add id button"
             <img ng-if="species.imageURL" ng-src="{{species.imageURL}}" alt="{{species.canonicalName}}" class="listImage" /> {{species.descriptions[0].description}}
             </div>
         </div>
-
+<div ng-if="numResults>limit" ng-click="loadMoreItems()">
+Load More ....
+</div>
     </div>
 
 </div>

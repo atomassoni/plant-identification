@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var PlantIDSchema = require('./plantid').schema;
+var UserVoteSchema = require('./uservote').schema;
 
 var UploadSchema = mongoose.Schema({
   comment: String,
