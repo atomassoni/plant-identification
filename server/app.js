@@ -19,11 +19,21 @@ var user = require('./routes/user');
 var register = require('./routes/register');
 
 
+
 // middleware
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, './public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Passport Session Configuration //
+app.use(session({
+   secret: 'secret',
+   key: 'user',
+   resave: 'true',
+   saveUninitialized: false,
+   cookie: { maxage: 60000, secure: false }
+}));
 
 // start up passport sessions
 app.use(passport.initialize());
@@ -36,6 +46,7 @@ app.use('/uploads', uploads);
 app.use('/register', register);
 app.use('/user', user);
 app.use('/*', index);
+
 
 // mongoose connection
 if(process.env.MONGODB_URI!= undefined) {

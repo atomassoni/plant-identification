@@ -1,4 +1,6 @@
-myApp.controller('HomeController', ['$scope', '$http', 'Upload', 'DataFactory', function($scope, $http, Upload, DataFactory) {
+myApp.controller('HomeController', ['$scope', '$http', 'Upload', 'DataFactory', '$window', '$location', function($scope, $http, Upload, DataFactory, $window, $location) {
+
+
     $scope.dataFactory = DataFactory;
     $scope.file = '';
     $scope.comment = '';
@@ -31,11 +33,26 @@ myApp.controller('HomeController', ['$scope', '$http', 'Upload', 'DataFactory', 
 
     $scope.userID = "574f2b394539cf4a7e69a877";
     $scope.userLevel = 5;
+    $scope.loggedIn = '';
 
     $scope.activePlant = {};
 
     $scope.voteThreshhold = 4;
     getImages();
+    checkLogin();
+
+    function checkLogin () {
+      $http.get('/user').then(function(response) {
+          if(response.data.username) {
+              $scope.userName = response.data.username;
+              console.log('User Data: ', $scope.userName);
+              $scope.loggedIn = 'yes';
+          } else {
+              $location.path("/home");
+              $scope.loggedIn = '';
+          }
+      });
+    }
 
     $scope.submit = function() {
       if ($scope.form.file.$valid && $scope.file) {

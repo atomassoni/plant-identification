@@ -1,7 +1,8 @@
 myApp.controller('LoginController', ['$scope', '$http', '$window', '$location', function($scope, $http, $window, $location) {
     $scope.user = {
       username: '',
-      password: ''
+      password: '',
+      level: 1
     };
     $scope.message = '';
 
@@ -11,12 +12,13 @@ myApp.controller('LoginController', ['$scope', '$http', '$window', '$location', 
       } else {
         console.log('sending to server...', $scope.user);
         $http.post('/', $scope.user).then(function(response) {
+            console.log('response from users collection', response.data);
           if(response.data.username) {
             console.log('success: ', response.data);
             // location works with SPA (ng-route)
-            $location.path('/user');
+            $location.path('/home');
           } else {
-            console.log('failure: ', response);
+            console.log('failure: ', response.data);
             $scope.message = "Wrong!!";
           }
         });

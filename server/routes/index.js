@@ -6,14 +6,15 @@ var path = require('path');
 // Handles login form POST from index.html
 router.post('/',
     passport.authenticate('local', {
-        successRedirect: '/user',
-        failureRedirect: '/'
+      successRedirect: '/user',
+      failureRedirect: '/'
     })
 );
 
 // Handle index file separately
 // Also catches any other request not explicitly matched elsewhere
 router.get('/', function(req, res) {
+  console.log("get from index.js");
   res.sendFile(path.join(__dirname, '../public/views/index.html'));
 });
 
