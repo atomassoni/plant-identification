@@ -34,6 +34,7 @@ myApp.controller('HomeController', ['$scope', '$http', 'Upload', 'DataFactory', 
 
     $scope.activePlant = {};
 
+    $scope.voteThreshhold = 4;
     getImages();
 
     $scope.submit = function() {
@@ -100,7 +101,17 @@ console.log('newid', plantID);
 
 
 
-
+$scope.calculateVotes = function (voteArray) {
+  var voteTotal = 0;
+  voteArray.forEach(function (item, index) {
+    voteTotal +=item.level;
+  });
+  if(voteTotal>$scope.voteThreshhold) {
+    return true;
+  } else {
+  return false;
+}
+};
 
         // if($scope.dataFactory.factoryGetFavorites() === undefined) {
         //   $scope.dataFactory.factoryRefreshFavoriteData().then(function() {

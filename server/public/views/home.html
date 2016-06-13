@@ -28,7 +28,7 @@
       {{picture.comment}}
     </div>
 <div ng-repeat="plant in picture.plantID">
-    <a ng-href="http://www.gbif.org/species/{{plant.apiKey}}" target="_blank">{{plant.name}} </a> <span class="selectID" ng-click="selectID(picture._id, plant._id)">select as id</span>
+    <a ng-href="http://www.gbif.org/species/{{plant.apiKey}}" target="_blank">{{plant.name}} </a> <span class="selectID" ng-click="selectID(picture._id, plant._id)">select as id</span><span ng-if="calculateVotes(plant.userVotes)">*** approved id ***</span>
 </div>
     <input type="text" ng-model="GBIFSearch.search" placeholder="Genus, species, common name, etc.">
         <select ng-options="rank.label for rank in GBIFranks" ng-model="GBIFSearch.rank">
