@@ -6,7 +6,7 @@ myApp.controller('UserController', ['$scope', '$http', '$window', '$location', f
           $scope.userName = response.data.username;
           console.log('User Data: ', $scope.userName);
       } else {
-          $location.path("/home");
+          $location.path("/login");
       }
   });
 

@@ -2,8 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var UserVoteSchema = new Schema({
-  user: { type: String,  unique: true},
-  level: { type: String }
+  user: { type: Object,  unique: true},
 });
 
 var UserVote = mongoose.model('UserVote', UserVoteSchema);

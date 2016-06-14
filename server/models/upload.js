@@ -6,6 +6,7 @@ var UploadSchema = mongoose.Schema({
   comment: String,
   created: Date,
   file: Object,
+  user: Object,
   plantID: [PlantIDSchema]
 });
 

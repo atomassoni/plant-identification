@@ -9,17 +9,18 @@ var multer = require('multer');
 var upload = multer({dest: 'server/public/uploads'});
 
 router.post('/', upload.single('file'), function (req, res, next) {
-  console.log('req.body', req.body.comment);
+
   console.log(req.file);
   var newUpload = {
     comment: req.body.comment,
     created: Date.now(),
+    user: req.body.user,
     file: req.file
   };
   Upload.create(newUpload, function (err, next) {
     if (err) {
       //next(err);
-      console.log("ERors");
+      console.log("ERrors");
     } else {
       res.send(newUpload);
     }
@@ -76,6 +77,12 @@ console.log('req.body', req.body);
 
 
     upload.plantID.forEach(function(item, index) {
+        item.userVotes.forEach(function (pItem, pIndex) {
+          if(pItem.user._id==userVote.user._id){
+            upload.plantID[index].userVotes.splice(pIndex,1);
+          }
+        })
+
       if(item._id == userVote.idIndex) {
         upload.plantID[index].userVotes.push(userVote);
       }

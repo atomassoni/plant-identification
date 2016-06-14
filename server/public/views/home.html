@@ -1,67 +1,66 @@
 <div class="row">
 
     <div class="six columns home">
-{{loggedIn}}
-<form name="form" class="listItem">
-  <div class="listHeader">
-    Add a picture for ID!
-  </div>
-<div class="listBody fileUpload">
+        <span ng-if="loggedIn">logged in as {{user.username}}</span> <a ng-if="loggedIn" ng-click="logout()">log out</a>
+        <a ng-if="!loggedIn" ng-href="#login">login</a>
 
+        <form name="form" class="listItem">
+            <div class="listHeader">
+                Add a picture for ID!
+            </div>
+            <div class="listBody fileUpload">
 
-  <div ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
-    ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100"
-    ngf-resize="{width: 400, height: 400}"><button>Select Picture</button> <span class="fileSelect">{{file.$ngfName}} </span>  <img ngf-thumbnail="file || '/images/upload.svg'"></div>
-    <input type="text" ng-model="comment" placeholder="Add comment.. location, which plant, etc. " class="u-full-width"/>
-<button type="submit" ng-click="submit()">Upload</button>
+                <div ngf-select ng-model="file" name="file" ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-resize="{width: 400, height: 400}">
+                    <button>Select Picture</button> <span class="fileSelect">{{file.$ngfName}} </span> <img ngf-thumbnail="file || '/images/upload.svg'"></div>
+                <input type="text" ng-model="comment" placeholder="Add comment.. location, which plant, etc. " class="u-full-width" />
+                <button type="submit" ng-click="submit()">Upload</button>
 
-</div>
-</form>
+            </div>
+        </form>
 
-<div class="listItem" ng-repeat="picture in uploads | orderBy: 'created' :true " >
-  <div class="listHeader">
-{{picture.created | date:'medium'}}
-  </div>
-  <div class="listBody" ng-click="setActive(picture)">
-    <img ng-src="/uploads/{{picture.file.filename}}" class="listImage"/>
-    <div>
-      {{picture.comment}}
+        <div class="listItem" ng-repeat="picture in uploads | orderBy: 'created' :true ">
+            <div class="listHeader">
+                {{picture.created | date:'medium'}}
+            </div>
+            <div class="listBody" ng-click="setActive(picture)">
+                <img ng-src="/uploads/{{picture.file.filename}}" class="listImage" />
+                <div>
+                    {{picture.comment}}
+                </div>
+                <div ng-repeat="plant in picture.plantID">
+                    <a ng-href="http://www.gbif.org/species/{{plant.apiKey}}" target="_blank">{{plant.name}} </a> <span class="selectID" ng-click="selectID(picture._id, plant._id)">select as id</span><span ng-if="calculateVotes(plant.userVotes)">*** approved id ***</span>
+                </div>
+                <input type="text" ng-model="GBIFSearch.search" placeholder="Genus, species, common name, etc.">
+                <select ng-options="rank.label for rank in GBIFranks" ng-model="GBIFSearch.rank">
+                </select>
+                <button ng-click="loadSpeciesInfo()">Search Species API</button>
+                <button class="button-primary" ng-click="submitID(picture._id)" ng-if="currentIdItem==picture._id">Add id of {{itemForID.name}}</button>
+
+            </div>
+        </div>
     </div>
-<div ng-repeat="plant in picture.plantID">
-    <a ng-href="http://www.gbif.org/species/{{plant.apiKey}}" target="_blank">{{plant.name}} </a> <span class="selectID" ng-click="selectID(picture._id, plant._id)">select as id</span><span ng-if="calculateVotes(plant.userVotes)">*** approved id ***</span>
-</div>
-    <input type="text" ng-model="GBIFSearch.search" placeholder="Genus, species, common name, etc.">
-        <select ng-options="rank.label for rank in GBIFranks" ng-model="GBIFSearch.rank">
-        </select>
-        <button ng-click="loadSpeciesInfo()">Search Species API</button>
-    <button class="button-primary" ng-click="submitID(picture._id)" ng-if="currentIdItem==picture._id">Add id of {{itemForID.name}}</button>
-
-  </div>
-</div>
-  </div>
-    <div class="six columns search" >
+    <div class="six columns search">
         <p ng-if="numResults>0">
-            <em>{{GBIFSearch.search}} </em>
-          returned {{numResults}} result<span ng-if="numResults!=1">s</span>.
+            <em>{{GBIFSearch.search}} </em> returned {{numResults}} result<span ng-if="numResults!=1">s</span>.
         </p>
         <p ng-if="numResults===0">
             Returned no results.
         </p>
 
-<button ng-click="showResults()" ng-if="numResults>0">{{show.buttonText}}</button>
-        <div ng-repeat="species in results"  class="listItem">
+        <button ng-click="showResults()" ng-if="numResults>0">{{show.buttonText}}</button>
+        <div ng-repeat="species in results" class="listItem">
             <div class="listHeader">
-              <i class="fa fa-angle-double-left" style="font-size:18px;color:white" ng-click="setSelectedSpecies(species.canonicalName, species.speciesKey)"></i>  <a ng-href="http://www.gbif.org/species/{{species.speciesKey}}" target="_blank"> {{species.canonicalName}} </a>
+                <i class="fa fa-angle-double-left" style="font-size:18px;color:white" ng-click="setSelectedSpecies(species.canonicalName, species.speciesKey)"> <em>select</em></i> <a ng-href="http://www.gbif.org/species/{{species.speciesKey}}" target="_blank"> {{species.canonicalName}} </a>
             </div>
             <div class="listBody" ng-show="show.allResults">
 
-            <span ng-repeat="name in species.vernacularNames" ng-if="name.language=='eng'"> <span class="vernacularName">{{name.vernacularName}}</span> </span>
-            <img ng-if="species.imageURL" ng-src="{{species.imageURL}}" alt="{{species.canonicalName}}" class="listImage" /> {{species.descriptions[0].description}}
+                <span ng-repeat="name in species.vernacularNames" ng-if="name.language=='eng'"> <span class="vernacularName">{{name.vernacularName}}</span> </span>
+                <img ng-if="species.imageURL" ng-src="{{species.imageURL}}" alt="{{species.canonicalName}}" class="listImage" /> {{species.descriptions[0].description}}
             </div>
         </div>
-<div ng-if="numResults>limit" ng-click="loadMoreItems()">
-Load More ....
-</div>
+        <div ng-if="numResults>limit" ng-click="loadMoreItems()">
+            Load More ....
+        </div>
     </div>
 
 </div>
