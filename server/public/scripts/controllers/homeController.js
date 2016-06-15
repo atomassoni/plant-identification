@@ -144,16 +144,16 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
         var plantID = $scope.itemForID;
         if ($scope.loggedIn) {
 
-        $http.put('/uploads/' + id, plantID)
-            .then(function(response) {
-                console.log('PUT /ids ', plantID);
-                getImages();
-                $scope.currentIdItem = '';
-                $scope.itemForID = {};
-            });
-          } else {
-          alert("Please log in or register if you'd like to suggest IDs");
-          }
+            $http.put('/uploads/' + id, plantID)
+                .then(function(response) {
+                    console.log('PUT /ids ', plantID);
+                    getImages();
+                    $scope.currentIdItem = '';
+                    $scope.itemForID = {};
+                });
+        } else {
+            alert("Please log in or register if you'd like to suggest IDs");
+        }
     };
 
 
@@ -279,6 +279,19 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
             $scope.limit = $scope.numResults;
         }
         getSpeciesInfo();
+    };
+
+    $scope.myData = {
+        link: "http://google.com",
+        modalShown: false,
+        hello: 'world',
+        foo: 'bar'
+    }
+    $scope.logClose = function() {
+        console.log('close!');
+    };
+    $scope.toggleModal = function() {
+        $scope.myData.modalShown = !$scope.myData.modalShown;
     };
 
 }]);
