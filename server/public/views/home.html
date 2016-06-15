@@ -18,22 +18,28 @@
 
         <div class="listItem" ng-repeat="picture in uploads | orderBy: 'created' :true ">
             <div class="listHeader">
-                {{picture.created | date:'medium'}}
+                <span ng-if="numAccepted(picture.approved)==0"> OPEN </span>
+                <span ng-if="numAccepted(picture.approved)==1"> ACCEPTED:  <a ng-href="http://www.gbif.org/species/{{picture.approved[0].speciesKey}}" target="_blank"> {{picture.approved[0].name}} </a> </span></span>
+                <span ng-if="numAccepted(picture.approved)>1"> DISPUTED:  <span ng-repeat="item in picture.approved"> <a ng-href="http://www.gbif.org/species/{{item.speciesKey}}" target="_blank">{{item.name}} </a></span></span>
             </div>
             <div class="listBody" ng-click="setActive(picture)">
                 <img ng-src="/uploads/{{picture.file.filename}}" class="listImage" />
                 <div>
                     {{picture.comment}}
-                </div>
+                    </div>
+                    <div>
+                        by <strong>{{picture.user.username}}</strong> on  {{picture.created | date:'medium'}}
+                    </div>
+
                 <div ng-repeat="plant in picture.plantID">
-                    <a ng-href="http://www.gbif.org/species/{{plant.apiKey}}" target="_blank">{{plant.name}} </a> <span class="selectID" ng-click="selectID(picture._id, plant._id)">select as id</span><span ng-if="calculateVotes(plant.userVotes)">*** approved id ***</span>
+                    <a ng-href="http://www.gbif.org/species/{{plant.apiKey}}" target="_blank">{{plant.name}} </a> <span class="selectID" ng-click="selectID(picture._id, plant)">select as id</span><span ng-if="dispCalculateVotes(plant.userVotes)>=voteThreshhold">*** approved id ***</span>
                 </div>
                 <div>
 
                 <button ng-click="toggleModal()">Suggest ID</button>
                 </div>
                 <div>
-                        <button class="button-primary" ng-click="submitID(picture._id)" ng-if="currentIdItem==picture._id">Add id of {{itemForID.name}}</button>
+                        <button class="button-primary" ng-click="submitID(picture._id)" ng-if="currentIdItem==picture._id">Save ID of  {{itemForID.name}}</button>
                 </div>
 
 
@@ -64,7 +70,7 @@
     <button ng-click="showResults()" ng-if="numResults>0">{{show.buttonText}}</button>
     <div ng-repeat="species in results" class="listItem">
         <div class="listHeader">
-             <em ng-click="setSelectedSpecies(species.canonicalName, species.speciesKey)">select</em> <a ng-href="http://www.gbif.org/species/{{species.speciesKey}}" target="_blank"> {{species.canonicalName}} </a>
+             <em ng-click="setSelectedSpecies(species.canonicalName, species.speciesKey)" class="selectID">select</em> <a ng-href="http://www.gbif.org/species/{{species.speciesKey}}" target="_blank"> {{species.canonicalName}} </a>
         </div>
         <div class="listBody" ng-show="show.allResults">
 
@@ -73,6 +79,6 @@
         </div>
     </div>
     <div ng-if="numResults>limit" ng-click="loadMoreItems()">
-        Load More ....
+        <button>Load More ....</button>
     </div>
      </modal-dialog>

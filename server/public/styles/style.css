@@ -4,8 +4,7 @@ header {
 }
 
 main {
-	padding-left: 4rem;
-	height:90rem;
+
 }
 
 footer {
@@ -24,10 +23,9 @@ footer {
 	background-color: lightgrey;
 	border-radius:.5rem;
 	margin: 2rem;
-
-box-shadow: .5rem .5rem .5rem grey;
-
+	box-shadow: .5rem .5rem .5rem grey;
 }
+
 .listHeader, .listHeader a {
 	background-color: black;
 	color: white;
@@ -50,4 +48,8 @@ box-shadow: .5rem .5rem .5rem grey;
 .fileSelect {
 	background-color: cornsilk;
 
+}
+
+.selectID:hover {
+	background-color: gold;
 }

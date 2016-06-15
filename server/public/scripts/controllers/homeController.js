@@ -45,8 +45,6 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
     };
 
     $scope.user = {};
-    $scope.userID = "574f2b394539cf4a7e69a877";
-    $scope.userLevel = 5;
 
     $scope.loggedIn = false;
     $scope.log = '';
@@ -82,10 +80,14 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
     }
 
     $scope.submit = function() {
+        if ($scope.loggedIn) {
         if ($scope.form.file.$valid && $scope.file) {
             $scope.upload($scope.file);
             console.log('file', $scope.file);
         }
+    } else {
+        alert("Please login or register to upload");
+    }
     };
 
     // upload on file select or drop
@@ -122,18 +124,20 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
         console.log($scope.activeItem);
     };
 
-    $scope.selectID = function(id, idIndex) {
+    $scope.selectID = function(id, plant) {
+
         if ($scope.loggedIn) {
             console.log("id", id);
+
             var userVote = {
                 'user': $scope.user,
-                'idIndex': idIndex
+                'idIndex': plant._id
             };
             $http.put('/uploads/select/' + id, userVote)
                 .then(function(response) {
                     console.log('PUT /selects ', userVote);
+                    checkApproval($scope.activeItem, plant);
                     getImages();
-
                 });
         } else {
             alert("If you'd like to select this as the ID, please log in or register");
@@ -156,21 +160,61 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
         }
     };
 
+//find out whether a displayed ID suggestion has enough votes to be approved
+$scope.dispCalculateVotes = function (voteArray) {
+    calculateVotes(voteArray);
+};
 
-
-
-    $scope.calculateVotes = function(voteArray) {
+//calculate the votes that an ID suggestion has
+    function calculateVotes (voteArray) {
+        console.log("calculating votes");
         var voteTotal = 0;
         voteArray.forEach(function(item, index) {
-            voteTotal += item.level;
+            voteTotal += item.user.level;
         });
-        if (voteTotal > $scope.voteThreshhold) {
-            return true;
-        } else {
-            return false;
-        }
-    };
+        return voteTotal;
+    }
 
+//see if
+    function checkApproval (uploadObj, plant) {
+        var numVotes = 0;
+        var found = false;
+        console.log("wat is the plant object?", plant);
+        var approved = {'apiKey' : plant.apiKey , 'name' : plant.name };
+
+        uploadObj.plantID.forEach(function(item, index){
+
+            numVotes = calculateVotes(item.userVotes);
+            console.log('plant id item', item);
+
+            uploadObj.approved.forEach(function(pItem, pIndex){
+                console.log('pitem', pItem);
+                console.log('item.apiKey', item.apiKey);
+                if (pItem.apiKey == plant.apiKey) {
+                    found = true;
+                    console.log("FOUND SO NOT PUTTING");
+                }
+            });
+
+         });
+         if (!found && numVotes>$scope.voteThreshhold) {
+             submitApprovedID(approved, uploadObj._id);
+         }
+        }
+
+
+
+    function submitApprovedID (approved, id) {
+        $http.put('/uploads/approved/' + id, approved)
+            .then(function(response) {
+                console.log('PUT /approved ', approved);
+                getImages();
+            });
+    }
+
+    $scope.numAccepted = function (approvedArray) {
+        return approvedArray.length;
+    }
     // if($scope.dataFactory.factoryGetFavorites() === undefined) {
     //   $scope.dataFactory.factoryRefreshFavoriteData().then(function() {
     //     $scope.favCount = $scope.dataFactory.factoryGetFavorites().length;
@@ -281,17 +325,24 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
         getSpeciesInfo();
     };
 
+//modal code
     $scope.myData = {
         link: "http://google.com",
         modalShown: false,
         hello: 'world',
         foo: 'bar'
     }
+
     $scope.logClose = function() {
         console.log('close!');
+        $scope.GBIFSearch.search = '';
+        $scope.results = [];
+        $scope.numResults = '';
     };
     $scope.toggleModal = function() {
+
         $scope.myData.modalShown = !$scope.myData.modalShown;
+
     };
 
 }]);

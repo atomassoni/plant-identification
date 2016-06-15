@@ -99,6 +99,28 @@ console.log('req.body', req.body);
   });
 });
 
+router.put('/approved/:id', function (req, res) {
+  var id = req.params.id;
+  var approvedID = req.body; // {object}
+console.log('req.body', req.body);
+  Upload.findById(id, function (err, upload) {
+    if (err) {
+      res.sendStatus(500);
+      return;
+    }
+
+    upload.approved.push(approvedID);
+
+    upload.save(function (err) {
+      if (err) {
+        res.sendStatus(500);
+        return;
+      }
+
+      res.sendStatus(204);
+    });
+  });
+});
 
 router.put('/:id', function (req, res) {
   var id = req.params.id;
