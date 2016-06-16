@@ -1,17 +1,18 @@
-myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', 'Upload', 'DataFactory', function($scope, $http, $window, $location, Upload, DataFactory) {
+myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', 'Upload', function($scope, $http, $window, $location, Upload) {
 
-
-    $scope.dataFactory = DataFactory;
+//file variables
     $scope.file = '';
     $scope.comment = '';
     $scope.uploads = [];
     $scope.postTime = '';
 
+//item for ID variables
     $scope.currentIdItem = '';
     $scope.itemForID = {};
     $scope.itemForID.name = '';
     $scope.itemForID.apiKey = 0;
 
+//Search variables
     $scope.GBIFSearch = {};
     $scope.GBIFSearch.search = '';
     $scope.kingdom = 6;
@@ -38,23 +39,28 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
     $scope.limit = 20;
     $scope.offset = 0;
 
-
+//initial setting on search results, either shows all info or not
     $scope.show = {
         allResults: false,
         buttonText: 'Expand Results'
     };
 
+//user variables
     $scope.user = {};
-
     $scope.loggedIn = false;
     $scope.log = '';
 
+//sets the item that the user is interacting with
     $scope.activeItem = {};
 
+//how many votes it takes +1 to make an id acceptable
     $scope.voteThreshhold = 4;
+
+//initialize
     getImages();
     checkLogin();
 
+//user login functions
     function checkLogin() {
         $http.get('/user').then(function(response) {
             if (response.data.username) {
@@ -79,6 +85,7 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
         });
     }
 
+//file uploading functions
     $scope.submit = function() {
         if ($scope.loggedIn) {
         if ($scope.form.file.$valid && $scope.file) {
@@ -90,7 +97,6 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
     }
     };
 
-    // upload on file select or drop
     $scope.upload = function(file) {
 
         Upload.upload({
@@ -111,6 +117,7 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
         });
     };
 
+//loads page
     function getImages() {
         $http.get('/uploads')
             .then(function(response) {
@@ -118,21 +125,24 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
                 console.log('GET /uploads ', response.data);
             });
     }
-
+//sets photo item that user is interating with
     $scope.setActive = function(obj) {
         $scope.activeItem = obj;
         console.log($scope.activeItem);
     };
 
+//**** ID FUNCTIONS *****
+
+//lets user vote for an id
     $scope.selectID = function(id, plant) {
 
         if ($scope.loggedIn) {
-            console.log("id", id);
 
             var userVote = {
                 'user': $scope.user,
                 'idIndex': plant._id
             };
+
             $http.put('/uploads/select/' + id, userVote)
                 .then(function(response) {
                     console.log('PUT /selects ', userVote);
@@ -144,6 +154,7 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
         }
     };
 
+//submits a new id to an item
     $scope.submitID = function(id) {
         var plantID = $scope.itemForID;
         if ($scope.loggedIn) {
@@ -160,10 +171,11 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
         }
     };
 
+
 //find out whether a displayed ID suggestion has enough votes to be approved
-$scope.dispCalculateVotes = function (voteArray) {
-    calculateVotes(voteArray);
-};
+    $scope.dispCalculateVotes = function (voteArray) {
+        calculateVotes(voteArray);
+    };
 
 //calculate the votes that an ID suggestion has
     function calculateVotes (voteArray) {
@@ -175,7 +187,7 @@ $scope.dispCalculateVotes = function (voteArray) {
         return voteTotal;
     }
 
-//see if
+//see if an ID has enough votes to be on the accepted list
     function checkApproval (uploadObj, plant) {
         var numVotes = 0;
         var found = false;
@@ -202,8 +214,7 @@ $scope.dispCalculateVotes = function (voteArray) {
          }
         }
 
-
-
+//submits accepted IDs to the approved list
     function submitApprovedID (approved, id) {
         $http.put('/uploads/approved/' + id, approved)
             .then(function(response) {
@@ -211,23 +222,20 @@ $scope.dispCalculateVotes = function (voteArray) {
                 getImages();
             });
     }
-
+//utility to count the number of IDs in the accepted list
     $scope.numAccepted = function (approvedArray) {
         return approvedArray.length;
     }
-    // if($scope.dataFactory.factoryGetFavorites() === undefined) {
-    //   $scope.dataFactory.factoryRefreshFavoriteData().then(function() {
-    //     $scope.favCount = $scope.dataFactory.factoryGetFavorites().length;
-    //   });
-    // } else {
-    //   $scope.favCount = $scope.dataFactory.factoryGetFavorites().length;
-    // }
 
+// *** API SEARCH FUNCTIONS ****
+
+// displays the searched info
     $scope.loadSpeciesInfo = function() {
         $scope.limit = 20;
         getSpeciesInfo();
     }
 
+//makes the call to the API to get results
     function getSpeciesInfo() {
 
         $scope.currentIdItem = $scope.activeItem._id;
@@ -292,7 +300,7 @@ $scope.dispCalculateVotes = function (voteArray) {
 
 
     };
-
+//utility function to get an image from each species
     function itemImage(key) {
 
         var query = 'key=' + key;
@@ -300,13 +308,14 @@ $scope.dispCalculateVotes = function (voteArray) {
 
     }
 
+//sets the species when a user selects it from the list of species
     $scope.setSelectedSpecies = function(name, key) {
 
         $scope.itemForID.name = name;
         $scope.itemForID.apiKey = key;
 
     }
-
+//allows user to toggle complete search results or just names
     $scope.showResults = function() {
         if ($scope.show.allResults) {
             $scope.show.allResults = false;
@@ -316,7 +325,7 @@ $scope.dispCalculateVotes = function (voteArray) {
             $scope.show.buttonText = 'Collapse results';
         }
     };
-
+//allows user to load more than 20 items on the search, upon click
     $scope.loadMoreItems = function() {
         $scope.limit += 10;
         if ($scope.limit > $scope.numResults) {
