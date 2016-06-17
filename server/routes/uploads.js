@@ -32,7 +32,9 @@ router.post('/', upload.single('file'), function (req, res, next) {
 //
 // var aws = require('aws-sdk');
 //
-// var s3 = new aws.S3({ /* ... */ });
+// var s3 = new aws.S3({  params: {
+//    Bucket: process.env.S3_BUCKET_NAME
+//  } });
 //
 // var upload = multer({
 //   storage: multerS3({
@@ -51,8 +53,6 @@ router.post('/', upload.single('file'), function (req, res, next) {
 // router.post('/', upload.single('file'), function(req, res, next) {
 //   res.send('Successfully uploaded ' + req.files.length + ' files!');
 // })
-
-
 
 router.get('/', function (req, res) {
   Upload.find({}, function (err, data) {

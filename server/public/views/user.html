@@ -1,3 +1,35 @@
 
-    <h1 id="welcome" class="lead">Welcome, {{userName}}!</h1>
-    <button ng-click="logout()">Log Out</button>
+    <span>logged in as  <strong>{{user.username}}</strong></span>
+    <a ng-href="" ng-click="logout()">{{log}}</a>
+
+    <table class="u-full-width">
+      <thead>
+        <tr>
+        <th ng-if="admin">
+            Posted By
+        </th>
+          <th>File</th>
+          <th>Date</th>
+          <th>Accepted status</th>
+          <th>Proposed IDs</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr ng-repeat="upload in uploads">
+            <td ng-if="admin">
+                {{upload.user.username}}
+            </td>
+          <td><img class="tableImage" ng-src="{{imagePath}}{{upload.file.filename}}" /><div>
+              {{upload.file.originalname}}
+          </div></td>
+          <td>{{upload.created | date : 'medium'}}</td>
+          <td ng-if="!upload.approved[0]">None</td>
+          <td ng-if="upload.approved[0]"><button ng-repeat="approved in upload.approved" ng-click="removeApproved(upload._id,  approved._id)">{{approved.name}} <span ng-if="admin">|x|</span></button></td>
+          <td ng-if="!upload.plantID[0]">None</td>
+          <td ng-if="upload.plantID[0]"><button ng-repeat="item in upload.plantID" ng-click="removeID(upload._id, item._id)">{{item.name}} |X|</button></td>
+          <td><button ng-click="removeItem(upload._id)">|X|</button></td></td>
+        </tr>
+      </tbody>
+    </table>

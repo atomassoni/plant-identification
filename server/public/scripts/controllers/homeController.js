@@ -59,7 +59,14 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
 //initialize
     getImages();
     checkLogin();
-
+//loads page
+    function getImages() {
+        $http.get('/uploads')
+            .then(function(response) {
+                $scope.uploads = response.data;
+                console.log('GET /uploads ', response.data);
+            });
+    }
 //user login functions
     function checkLogin() {
         $http.get('/user').then(function(response) {
@@ -117,14 +124,7 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
         });
     };
 
-//loads page
-    function getImages() {
-        $http.get('/uploads')
-            .then(function(response) {
-                $scope.uploads = response.data;
-                console.log('GET /uploads ', response.data);
-            });
-    }
+
 //sets photo item that user is interating with
     $scope.setActive = function(obj) {
         $scope.activeItem = obj;

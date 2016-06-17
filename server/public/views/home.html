@@ -19,8 +19,8 @@
 <div class="listItem" ng-repeat="picture in uploads | orderBy: 'created' : true ">
     <div class="listHeader">
         <span ng-if="numAccepted(picture.approved)==0"> OPEN </span>
-        <span ng-if="numAccepted(picture.approved)==1"> ACCEPTED:  <a ng-href="http://www.gbif.org/species/{{picture.approved[0].speciesKey}}" target="_blank"> {{picture.approved[0].name}} </a> </span></span>
-        <span ng-if="numAccepted(picture.approved)>1"> DISPUTED:  <span ng-repeat="item in picture.approved"> <a ng-href="http://www.gbif.org/species/{{item.speciesKey}}" target="_blank">{{item.name}} </a></span></span>
+        <span ng-if="numAccepted(picture.approved)==1"> ACCEPTED:  <a ng-href="http://www.gbif.org/species/{{picture.approved[0].apiKey}}" target="_blank"> {{picture.approved[0].name}} </a> </span></span>
+        <span ng-if="numAccepted(picture.approved)>1"> DISPUTED:  <span ng-repeat="item in picture.approved"> <a ng-href="http://www.gbif.org/species/{{item.apiKey}}" target="_blank">{{item.name}} </a></span></span>
     </div>
     <div class="listBody" ng-click="setActive(picture)">
         <img ng-src="/uploads/{{picture.file.filename}}" class="listImage" />

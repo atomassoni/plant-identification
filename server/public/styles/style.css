@@ -35,7 +35,9 @@ footer {
 .listBody {
 	padding:2rem;
 }
-
+.tableImage {
+	width:6rem;
+}
 .listImage {
 
 	max-width: 100%;
