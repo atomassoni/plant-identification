@@ -226,7 +226,18 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
     $scope.numAccepted = function (approvedArray) {
         return approvedArray.length;
     }
-
+//utility to check if an item is in an array
+    $scope.inArray = function (id, array) {
+        var exists = false;
+        array.forEach(function (pItem, index) {
+            console.log("pItem.user._id", pItem.user._id);
+            console.log("id", id);
+            if (pItem.user._id == id) {
+                exists =  true;
+            }
+        });
+        return exists;
+    };
 // *** API SEARCH FUNCTIONS ****
 
 // displays the searched info
@@ -313,7 +324,7 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
 
         $scope.itemForID.name = name;
         $scope.itemForID.apiKey = key;
-    
+
 
     }
 //allows user to toggle complete search results or just names
