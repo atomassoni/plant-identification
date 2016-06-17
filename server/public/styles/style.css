@@ -52,6 +52,14 @@ footer {
 
 }
 
+
 .selectID:hover {
 	background-color: gold;
+	cursor:pointer;
+
+}
+
+.selectedID {
+	background-color: gold;
+	cursor: pointer;
 }

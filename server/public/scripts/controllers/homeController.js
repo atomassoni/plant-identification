@@ -313,6 +313,7 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
 
         $scope.itemForID.name = name;
         $scope.itemForID.apiKey = key;
+    
 
     }
 //allows user to toggle complete search results or just names
@@ -353,5 +354,7 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
         $scope.myData.modalShown = !$scope.myData.modalShown;
 
     };
+
+
 
 }]);

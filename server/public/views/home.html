@@ -20,7 +20,7 @@
     <div class="listHeader">
         <span ng-if="numAccepted(picture.approved)==0"> OPEN </span>
         <span ng-if="numAccepted(picture.approved)==1"> ACCEPTED:  <a ng-href="http://www.gbif.org/species/{{picture.approved[0].apiKey}}" target="_blank"> {{picture.approved[0].name}} </a> </span></span>
-        <span ng-if="numAccepted(picture.approved)>1"> DISPUTED:  <span ng-repeat="item in picture.approved"> <a ng-href="http://www.gbif.org/species/{{item.apiKey}}" target="_blank">{{item.name}} </a></span></span>
+        <span ng-if="numAccepted(picture.approved)>1"> DISPUTED: <span ng-repeat="item in picture.approved"> <a ng-href="http://www.gbif.org/species/{{item.apiKey}}" target="_blank">{{item.name}} </a></span></span>
     </div>
     <div class="listBody" ng-click="setActive(picture)">
         <img ng-src="/uploads/{{picture.file.filename}}" class="listImage" />
@@ -32,7 +32,7 @@
         </div>
 
         <div ng-repeat="plant in picture.plantID">
-            <a ng-href="http://www.gbif.org/species/{{plant.apiKey}}" target="_blank">{{plant.name}} </a> <span class="selectID" ng-click="selectID(picture._id, plant)">select as id</span><span ng-if="dispCalculateVotes(plant.userVotes)>=voteThreshhold">*** approved id ***</span>
+            <a ng-href="http://www.gbif.org/species/{{plant.apiKey}}" target="_blank">{{plant.name}} </a> <span class="selectID" ng-click="selectID(picture._id, plant)">select as id</span>
         </div>
         <div>
 
@@ -64,7 +64,8 @@
     <button ng-click="showResults()" ng-if="numResults>0">{{show.buttonText}}</button>
     <div ng-repeat="species in results" class="listItem">
         <div class="listHeader">
-            <em ng-click="setSelectedSpecies(species.canonicalName, species.speciesKey)" class="selectID">select</em> <a ng-href="http://www.gbif.org/species/{{species.speciesKey}}" target="_blank"> {{species.canonicalName}} </a>
+            <em ng-if="species.speciesKey==itemForID.apiKey" class="selectedID">selected</em>
+            <em ng-if="species.speciesKey!=itemForID.apiKey" ng-click="setSelectedSpecies(species.canonicalName, species.speciesKey)" class="selectID">select</em> <a ng-href="http://www.gbif.org/species/{{species.speciesKey}}" target="_blank"> {{species.canonicalName}} </a>
         </div>
         <div class="listBody" ng-show="show.allResults">
 
