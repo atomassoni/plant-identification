@@ -15,11 +15,10 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
 //Search variables
     $scope.GBIFSearch = {};
     $scope.GBIFSearch.search = '';
-    $scope.kingdom = 6;
     $scope.GBIFSearch.rank = {
         rank: 'SPECIES'
     };
-
+    //select dropdown on search bar
     $scope.GBIFranks = [{
         rank: 'SPECIES',
         label: 'Species level search'
@@ -32,10 +31,13 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
     }];
 
     $scope.results = [];
-    $scope.positiveID = '';
     $scope.speciesKey = '';
     $scope.image = '';
     $scope.numResults = '';
+
+    //query parameters
+    $scope.highertaxonKey = 6;
+    $scope.language = 'ENG';
     $scope.limit = 20;
     $scope.offset = 0;
 
@@ -250,9 +252,12 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
     function getSpeciesInfo() {
 
         $scope.currentIdItem = $scope.activeItem._id;
-        var query = 'q=' + encodeURI($scope.GBIFSearch.search);
+
+        var query = 'taxonkey=' + $scope.highertaxonKey;
+        query += '&q=' + encodeURI($scope.GBIFSearch.search);
         query += '&rank=' + $scope.GBIFSearch.rank.rank;
         query += '&limit=' + $scope.limit;
+        query += '&language=' + $scope.language;
 
         if ($scope.GBIFSearch.rank.rank == 'SPECIES') {
 
@@ -276,9 +281,7 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
                             });
                         return rObj;
                     })
-                    console.log('NEW OBJ', $scope.results);
 
-                    //$scope.GBIFSearch = {};
                 }
 
 

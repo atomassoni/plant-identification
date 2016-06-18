@@ -2,13 +2,15 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 var GBIFBaseURL = 'http://api.gbif.org/v1';
-var query = '/species/search?highertaxonKey=6&language=ENG';
+var query = '/species/search?';
 
 router.get('/species', function (req, res) {
   var query1 = GBIFBaseURL+query;
+  query1 += 'highertaxonKey=' + req.query.taxonkey;
   query1 += '&q=' + req.query.q;
   query1 += '&rank=' + req.query.rank;
   query1 += '&limit=' + req.query.limit;
+  query1 += '&language=' + req.query.language;
 console.log(query1);
 
  request(query1, function (error, response, body) {
