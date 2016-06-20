@@ -31,7 +31,7 @@ myApp.controller('LoginController', ['$scope', '$http', '$window', '$location', 
         console.log('sending to server...', $scope.user);
         $http.post('/register', $scope.user).then(function(response) {
           console.log('success');
-          $location.path('/home');
+          $location.path('/login');
         },
         function(response) {
           console.log('error');

@@ -77,13 +77,17 @@ console.log('req.body', req.body);
 
 
     upload.plantID.forEach(function(item, index) {
+        var removed = false;
         item.userVotes.forEach(function (pItem, pIndex) {
+          //removes the previous votes so the user has only one guess per upload item
           if(pItem.user._id==userVote.user._id){
+            removed = item._id;
             upload.plantID[index].userVotes.splice(pIndex,1);
           }
         })
-
-      if(item._id == userVote.idIndex) {
+  console.log('removed', removed);
+  console.log('userVotes.index', userVote.idIndex);
+      if(item._id == userVote.idIndex && removed != userVote.idIndex) {
         upload.plantID[index].userVotes.push(userVote);
       }
     });

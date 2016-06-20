@@ -4,6 +4,7 @@ var UserVoteSchema = require('./uservote').schema;
 var ApprovedSchema = require('./approved').schema;
 
 var UploadSchema = mongoose.Schema({
+//  highertaxonKey: Number,
   comment: String,
   created: Date,
   file: Object,

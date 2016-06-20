@@ -1,6 +1,8 @@
 header {
-	background-color: peachpuff;
-	height: 1rem;
+	background-color: lightgreen;
+	height: 3rem;
+text-align: center;
+
 }
 
 main {
@@ -12,7 +14,14 @@ footer {
 
 }
 
+.nav {
+	background-color: lightgreen;
+padding-left: 1rem;
+}
 
+.nav .button {
+	background-color: white;
+}
 .vernacularName {
 	background-color: cornsilk;
 	font-weight: lighter;
@@ -60,6 +69,6 @@ footer {
 }
 
 .selectedID {
-	background-color: gold;
+	background-color: tomato;
 	cursor: pointer;
 }

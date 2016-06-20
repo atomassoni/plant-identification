@@ -5,6 +5,7 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
     $scope.comment = '';
     $scope.uploads = [];
     $scope.postTime = '';
+    $scope.lastUpload = '';
 
 //item for ID variables
     $scope.currentIdItem = '';
@@ -97,13 +98,13 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
 //file uploading functions
     $scope.submit = function() {
         if ($scope.loggedIn) {
-        if ($scope.form.file.$valid && $scope.file) {
-            $scope.upload($scope.file);
-            console.log('file', $scope.file);
-        }
-    } else {
+            if ($scope.form.file.$valid && $scope.file) {
+                $scope.upload($scope.file);
+                console.log('file', $scope.file);
+            }
+        } else {
         alert("Please login or register to upload");
-    }
+        }
     };
 
     $scope.upload = function(file) {
@@ -160,14 +161,17 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
     $scope.submitID = function(id) {
         var plantID = $scope.itemForID;
         if ($scope.loggedIn) {
-
-            $http.put('/uploads/' + id, plantID)
-                .then(function(response) {
-                    console.log('PUT /ids ', plantID);
-                    getImages();
-                    $scope.currentIdItem = '';
-                    $scope.itemForID = {};
-                });
+            if($scope.itemForID.name != '') {
+                $http.put('/uploads/' + id, plantID)
+                    .then(function(response) {
+                        console.log('PUT /ids ', plantID);
+                        getImages();
+                        $scope.currentIdItem = '';
+                        $scope.itemForID = {};
+                    });
+            } else {
+                alert('“It is common sense to take a method and try it. If it fails, admit it frankly and try another. But above all, try something.” ');
+            }
         } else {
             alert("Please log in or register if you'd like to suggest IDs");
         }
@@ -193,7 +197,7 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
     function checkApproval (uploadObj, plant) {
         var numVotes = 0;
         var found = false;
-        console.log("wat is the plant object?", plant);
+
         var approved = {'apiKey' : plant.apiKey , 'name' : plant.name };
 
         uploadObj.plantID.forEach(function(item, index){
@@ -202,8 +206,7 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
             console.log('plant id item', item);
 
             uploadObj.approved.forEach(function(pItem, pIndex){
-                console.log('pitem', pItem);
-                console.log('item.apiKey', item.apiKey);
+
                 if (pItem.apiKey == plant.apiKey) {
                     found = true;
                     console.log("FOUND SO NOT PUTTING");
@@ -224,22 +227,23 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
                 getImages();
             });
     }
+
 //utility to count the number of IDs in the accepted list
     $scope.numAccepted = function (approvedArray) {
         return approvedArray.length;
     }
-//utility to check if an item is in an array
-    $scope.inArray = function (id, array) {
+//utility to check if an item is in the uservote array
+    $scope.isVote = function (id, array) {
         var exists = false;
         array.forEach(function (pItem, index) {
-            console.log("pItem.user._id", pItem.user._id);
-            console.log("id", id);
+
             if (pItem.user._id == id) {
                 exists =  true;
             }
         });
         return exists;
     };
+
 // *** API SEARCH FUNCTIONS ****
 
 // displays the searched info
@@ -351,10 +355,9 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
 
 //modal code
     $scope.myData = {
-        link: "http://google.com",
+
         modalShown: false,
-        hello: 'world',
-        foo: 'bar'
+
     }
 
     $scope.logClose = function() {

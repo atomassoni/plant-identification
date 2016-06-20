@@ -1,5 +1,5 @@
 <span ng-if="loggedIn">logged in as {{user.username}}</span>
-<a ng-if="loggedIn" ng-click="logout()">log out</a>
+<a ng-href="#home" ng-if="loggedIn" ng-click="logout()">log out</a>
 <a ng-if="!loggedIn" ng-href="#login">login</a>
 
 <form name="form" class="listItem">
@@ -34,8 +34,8 @@
         <div ng-repeat="plant in picture.plantID">
             <a ng-href="http://www.gbif.org/species/{{plant.apiKey}}" target="_blank">{{plant.name}} </a>
 
-            <span ng-if="inArray(user._id, plant.userVotes)" class="selectedID" ng-click="selectID(picture._id, plant)">selected</span>
-            <span ng-if="!inArray(user._id, plant.userVotes)" class="selectID" ng-click="selectID(picture._id, plant)">select as id</span>
+            <span ng-if="isVote(user._id, plant.userVotes)" class="selectedID" ng-click="selectID(picture._id, plant)">selected</span>
+            <span ng-if="!isVote(user._id, plant.userVotes)" class="selectID" ng-click="selectID(picture._id, plant)">select as id</span>
         </div>
         <div>
 
