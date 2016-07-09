@@ -50,7 +50,7 @@ app.use('/*', index);
 
 // mongoose connection
 if(process.env.MONGODB_URI!= undefined) {
-  var connectionString = process.env.MONGODB_URI + "?ssl=true";
+  var connectionString = process.env.MONGODB_URI;
 } else {
     var connectionString = 'mongodb://localhost:27017/mu';
 }
