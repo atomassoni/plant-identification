@@ -20,7 +20,7 @@ router.post('/', upload.single('file'), function (req, res, next) {
   Upload.create(newUpload, function (err, next) {
     if (err) {
       //next(err);
-      console.log("ERrors");
+      console.log("Errors");
     } else {
       res.send(newUpload);
     }
@@ -37,7 +37,7 @@ router.post('/', upload.single('file'), function (req, res, next) {
 // var upload = multer({
 //   storage: multerS3({
 //     s3: s3,
-//     bucket: process.env.S3_BUCKET_NAME,
+//     bucket: 'primedigitalplantid',
 //     metadata: function (req, file, cb) {
 //       cb(null, {fieldName: file.fieldname});
 //     },
