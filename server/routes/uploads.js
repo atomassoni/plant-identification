@@ -4,53 +4,62 @@ var fs = require('fs');
 var Upload = require('../models/upload');
 var multer = require('multer');
 
-//local file saving for uploads
-
-var upload = multer({dest: 'server/public/uploads'});
-
-router.post('/', upload.single('file'), function (req, res, next) {
-
-  console.log(req.file);
-  var newUpload = {
-    comment: req.body.comment,
-    created: Date.now(),
-    user: req.body.user,
-    file: req.file
-  };
-  Upload.create(newUpload, function (err, next) {
-    if (err) {
-      //next(err);
-      console.log("Errors");
-    } else {
-      res.send(newUpload);
-    }
-  });
-});
-
-// //s3 uploads
-// var multerS3 = require('multer-s3');
+// //local file saving for uploads
 //
-// var aws = require('aws-sdk');
+// var upload = multer({dest: 'server/public/uploads'});
 //
-// var s3 = new aws.S3();
+// router.post('/', upload.single('file'), function (req, res, next) {
 //
-// var upload = multer({
-//   storage: multerS3({
-//     s3: s3,
-//     bucket: 'primedigitalplantid',
-//     metadata: function (req, file, cb) {
-//       cb(null, {fieldName: file.fieldname});
-//     },
-//     key: function (req, file, cb) {
-//       cb(null, Date.now().toString())
+//   console.log(req.file);
+//   var newUpload = {
+//     comment: req.body.comment,
+//     created: Date.now(),
+//     user: req.body.user,
+//     file: req.file
+//   };
+//   Upload.create(newUpload, function (err, next) {
+//     if (err) {
+//       //next(err);
+//       console.log("Errors");
+//     } else {
+//       res.send(newUpload);
 //     }
-//   })
+//   });
 // });
 
+//s3 uploads
+var multerS3 = require('multer-s3');
 
-// router.post('/', upload.single('file'), function(req, res, next) {
-//   res.send('Successfully uploaded ' + req.files.length + ' files!');
-// })
+var aws = require('aws-sdk');
+
+var s3 = new aws.S3();
+
+var upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'primedigitalplantid',
+    metadata: function (req, file, cb) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString())
+    }
+  })
+  //   Upload.create(newUpload, function (err, next) {
+  //     if (err) {
+  //       //next(err);
+  //       console.log("Errors");
+  //     } else {
+  //       res.send(newUpload);
+  //     }
+  //   });
+});
+
+
+router.post('/', upload.single('file'), function(req, res, next) {
+  console.log(upload.single('file'));
+  res.send('Successfully uploaded ' + req.files.length + ' files!');
+});
 
 router.get('/', function (req, res) {
   Upload.find({}, function (err, data) {
@@ -61,7 +70,7 @@ router.get('/', function (req, res) {
 
     res.send(data);
   });
-});
+ });
 
 router.put('/select/:id', function (req, res) {
   var id = req.params.id;
