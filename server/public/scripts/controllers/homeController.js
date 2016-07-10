@@ -118,17 +118,18 @@ myApp.controller('HomeController', ['$scope', '$http', '$window', '$location', '
             }
         }).then(function(resp) {
             console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+            getImages();
         }, function(resp) {
             console.log('Error status: ' + resp.status);
         }, function(evt) {
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
             console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-            getImages();
+
         });
     };
 
 
-//sets photo item that user is interating with
+//sets photo item that user is interacting with
     $scope.setActive = function(obj) {
         $scope.activeItem = obj;
         console.log($scope.activeItem);

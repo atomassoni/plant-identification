@@ -3,6 +3,7 @@ var router = express.Router();
 var fs = require('fs');
 var Upload = require('../models/upload');
 var multer = require('multer');
+var folder = 'plants/' //aws public folder name , need trailing '/'
 
 // //local file saving for uploads
 //
@@ -42,23 +43,30 @@ var upload = multer({
       cb(null, {fieldName: file.fieldname});
     },
     key: function (req, file, cb) {
-      cb(null, Date.now().toString())
+      cb(null, folder + Date.now().toString())
     }
   })
-  //   Upload.create(newUpload, function (err, next) {
-  //     if (err) {
-  //       //next(err);
-  //       console.log("Errors");
-  //     } else {
-  //       res.send(newUpload);
-  //     }
-  //   });
+
 });
 
 
-router.post('/', upload.single('file'), function(req, res, next) {
-  console.log(upload.single('file'));
-  res.send('Successfully uploaded ' + req.files.length + ' files!');
+router.post('/', upload.single('file'), function(req, res) {
+
+
+  var newUpload = {
+    comment: req.body.comment,
+    created: Date.now(),
+    user: req.body.user,
+    file: req.file
+  };
+  Upload.create(newUpload, function (err) {
+    if (err) {
+      //next(err);
+      console.log("Errors");
+    } else {
+      res.send(newUpload);
+    }
+  });
 });
 
 router.get('/', function (req, res) {
