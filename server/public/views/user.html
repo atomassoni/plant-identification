@@ -21,7 +21,7 @@
             <td ng-if="admin">
                 {{upload.user.username}}
             </td>
-          <td><img class="tableImage" ng-src="{{imagePath}}{{upload.file.filename}}" /><div>
+          <td><img class="tableImage" ng-src="{{upload.file.location}}" /><div>
               {{upload.file.originalname}}
           </div></td>
           <td>{{upload.created | date : 'medium'}}</td>
