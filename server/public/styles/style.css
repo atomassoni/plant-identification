@@ -1,5 +1,5 @@
 header {
-	background-color: lightgreen;
+	background-color: white;
 	height: 3rem;
 text-align: center;
 	box-shadow: .5rem .5rem .5rem grey;
@@ -11,7 +11,7 @@ header h1 {
 
 }
 body {
-background-color: lightgreen;
+background-color: white;
 }
 
 footer {
@@ -20,7 +20,7 @@ footer {
 }
 
 .nav {
-	background-color: lightgreen;
+	background-color: white;
 padding-left: 1rem;
 }
 
