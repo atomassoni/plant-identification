@@ -71,7 +71,11 @@ padding-left: 1rem;
 	background-color: tomato;
 	cursor: pointer;
 }
+.listImage {
+	width: 100%;
+	box-sizing: border-box;
 
+}
 
 /* Larger than mobile */
 @media (min-width: 1000px) {
