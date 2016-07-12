@@ -3,7 +3,7 @@ var router = express.Router();
 var fs = require('fs');
 var Upload = require('../models/upload');
 var multer = require('multer');
-var folder = 'plants/' //aws public folder name , need trailing '/'
+var folder = 'plants/'; //aws public folder name , need trailing '/'
 
 // //local file saving for uploads
 //
@@ -39,6 +39,7 @@ var upload = multer({
   storage: multerS3({
     s3: s3,
     bucket: 'primedigitalplantid',
+    acl: 'public-read',
     metadata: function (req, file, cb) {
       cb(null, {fieldName: file.fieldname});
     },
@@ -51,7 +52,6 @@ var upload = multer({
 
 
 router.post('/', upload.single('file'), function(req, res) {
-
 
   var newUpload = {
     comment: req.body.comment,
