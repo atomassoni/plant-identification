@@ -2,7 +2,7 @@ header {
 	background-color: white;
 	height: 3rem;
 	text-align: center;
-	box-shadow: .5rem .5rem .5rem grey;
+
 }
 
 header h1 {
@@ -12,18 +12,23 @@ header h1 {
 }
 body {
 background-color: white;
+
 }
+.container {
+	max-width:100%;
+
+ }
 
 footer {
 	background:#ffab62;
 
 }
-
+/*
 .nav {
 	background-color: white;
 padding-left: 1rem;
 }
-
+*/
 .nav .button {
 	background-color: lemonchiffon;
 }
@@ -42,8 +47,14 @@ padding-left: 1rem;
 	box-sizing: border-box;
 }
 
-
-
+.listHeader, .listHeader a {
+	background-color: black;
+	color: white;
+	padding:.5rem;
+}
+.listItem {
+	margin-top:4rem;
+}
 .fileSelect {
 	background-color: cornsilk;
 
@@ -61,8 +72,9 @@ padding-left: 1rem;
 	cursor: pointer;
 }
 
+
 /* Larger than mobile */
-@media (min-width: 400px) {
+@media (min-width: 1000px) {
 
 	.fileUpload {
 		height:15rem;
@@ -73,16 +85,16 @@ padding-left: 1rem;
 		background-color: lightgrey;
 		border-radius:.5rem;
 		box-shadow: .5rem .5rem .5rem grey;
-		margin-top:2rem;
-	}
 
-	.listHeader, .listHeader a {
-		background-color: black;
-		color: white;
-		padding:.5rem;
+
 	}
 
 	.listBody {
-		padding:2rem;
+		padding: 2rem;
+	}
+	.listImage {
+		width: 100%;
+		box-sizing: border-box;
+
 	}
 }
